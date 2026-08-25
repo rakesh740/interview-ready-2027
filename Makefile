@@ -1,5 +1,7 @@
 .PHONY: build test run docker-build kind-load deploy
 
+SERVICES := api dispatcher worker
+
 build:
 	go build ./...
 
@@ -7,15 +9,17 @@ test:
 	go test ./...
 
 run:
-	@echo "cmd/server and cmd/worker not implemented yet — Week 1 build"
+	@echo "cmd/api, cmd/dispatcher, cmd/worker not implemented yet — Week 1 build"
 
 docker-build:
-	docker build -t interview-ready-2027-server -f cmd/server/Dockerfile .
-	docker build -t interview-ready-2027-worker -f cmd/worker/Dockerfile .
+	@for svc in $(SERVICES); do \
+		docker build -t interview-ready-2027-$$svc -f cmd/$$svc/Dockerfile . ; \
+	done
 
 kind-load:
-	kind load docker-image interview-ready-2027-server --name interview-ready
-	kind load docker-image interview-ready-2027-worker --name interview-ready
+	@for svc in $(SERVICES); do \
+		kind load docker-image interview-ready-2027-$$svc --name interview-ready ; \
+	done
 
 deploy:
 	kubectl apply -f deploy/k8s/

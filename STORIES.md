@@ -32,10 +32,28 @@ _Status: not yet drilled (Week 2)._
 - **Likely follow-ups**: what did the matching algorithm actually optimize for? how was "cost" measured? what were the tradeoffs vs. a naive nearest-driver assignment?
 
 ## 4. IAM onboarding-workflow automation — Tech Prescient
-_Status: not yet drilled (Week 4 — draw the parallel to the CRD/controller reconciliation loop built that week)._
+_Status: not yet drilled (Week 12 — draw the parallel to the CRD/controller reconciliation loop built that week)._
 
 - **Situation**:
 - **Task**:
 - **Action**:
 - **Result**:
 - **Likely follow-ups**: what did the approval/rejection flow look like end-to-end? how is this conceptually similar to a Kubernetes controller reconciling desired vs. actual state?
+
+## 5. Mentoring junior developers — Kartbites
+_Status: not yet drilled (Week 17 — behavioral-round material for mock interviews)._
+
+- **Situation**:
+- **Task**:
+- **Action**:
+- **Result**:
+- **Likely follow-ups**: what specifically did you teach (Golang idioms? PostgreSQL patterns?)? how did you know it landed? a time mentoring didn't go well and what changed after.
+
+## 6. Distributed systems background (Raft/etcd, CAP theorem) — CoffeeBeans
+_Status: informal drilling throughout Month 2 Week 9 (leader election week) — capture any new angle here as it surfaces, formal pass in Week 17._
+
+- **Situation**:
+- **Task**:
+- **Action**:
+- **Result**:
+- **Likely follow-ups**: how does etcd's Raft implementation compare to the K8s Lease-based leader election used in this project's dispatcher? concrete CAP-theorem tradeoff you navigated in production, not textbook.
