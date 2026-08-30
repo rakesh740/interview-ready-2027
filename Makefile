@@ -9,7 +9,7 @@ test:
 	go test ./...
 
 run:
-	@echo "cmd/api, cmd/dispatcher, cmd/worker not implemented yet — Week 1 build"
+	go run ./cmd/api
 
 docker-build:
 	@for svc in $(SERVICES); do \
