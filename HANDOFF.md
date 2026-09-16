@@ -1,39 +1,43 @@
 # Handoff — interview-ready-2027
 
-_Written 2026-08-30. Read this at the start of a new session before doing anything else, then delete or ignore once its content is stale._
+_Written 2026-09-16. Read this at the start of a new session before doing anything else, then delete or ignore once its content is stale._
 
 ## What this project is
 
-An 18-week Go/Kubernetes interview-prep curriculum, tracked in `CURRICULUM.md`, that also incrementally builds a DAG workflow orchestration platform (see `README.md` for architecture). Trigger phrases from the curriculum: **"quiz me"** or **"today's task"** — read `CURRICULUM.md` for the current week/day and run the right mode (Monday off, Tuesday light quiz, Wed–Fri quiz+small coding increment, Sat–Sun weekend build block). After any quiz/story session, append weak spots to `QUESTIONS.md`.
+An 18-week Go/Kubernetes interview-prep curriculum, tracked in `CURRICULUM.md`, that also incrementally builds a DAG workflow orchestration platform (see `README.md`). Trigger phrases: **"quiz me"** / **"today's task"** — read `CURRICULUM.md` for the current week/day. After any quiz/story session, append weak spots to `QUESTIONS.md`.
 
 ## Critical working agreement — read this first
 
-**The user writes all implementation code themselves from here forward.** Claude's role is to quiz, explain, and review — not to write feature code. This was established explicitly after Claude built the entire Week 1 milestone unprompted and the user pushed back ("I did not code a single line? how can I learn like this"). Full detail and rationale is saved in Claude's persistent memory at `~/.claude/projects/-Users-rakeshrakshit/memory/feedback_interview_ready_user_codes.md` — a fresh agent should read that file too, since it governs how every future coding session in this repo should run.
-
-One exception was already made and is closed: the Week 1 code (commit `78c09d2`, see below) stays as-is; the user chose not to revert/redo it. Every coding task from Week 2 onward should have the user write the code, with Claude reviewing/interrogating it afterward like a real interviewer would.
+**The user writes all implementation code themselves from here forward.** Claude quizzes, explains, and reviews — it does not write feature code. Full rationale in Claude's persistent memory: `~/.claude/projects/-Users-rakeshrakshit/memory/feedback_interview_ready_user_codes.md` (a fresh agent should read that too). One exception already closed: Week 1 code (commit `78c09d2`) stays as Claude-authored; everything after is user-written.
 
 ## State of the repo
 
-- Commit `78c09d2` — Week 1 milestone: `proto/job.proto` (`JobService` with `SubmitJob`/`GetJobStatus`), generated stubs in `proto/jobpb/`, `internal/job/` (domain types, thread-safe `Store`, generic `Pool[T any]` worker pool), `cmd/api/` (gRPC server, `slog` structured logging, graceful shutdown on SIGINT/SIGTERM). Verified end-to-end via `grpcurl` (submit → running → succeeded, `NotFound` on unknown job, clean shutdown on `SIGTERM`). `make run` starts it.
-- **Uncommitted right now:** `QUESTIONS.md` has a large backlog entry appended (see below) that has not been committed. The user was asked whether to commit it and whether to continue Week 2's quiz or tackle backlog items first — that question was pending when this handoff was written; check the live conversation/user reply before assuming either.
+- Working tree has one uncommitted change at the time of writing: this handoff update plus a new `QUESTIONS.md` entry from this session — not yet committed. Everything else committed through `c1cee99`.
+- Week 1 milestone: commit `78c09d2` — gRPC `JobService`, `internal/job` (Store, generic `Pool[T]`), `cmd/api`. `make run` works, verified via `grpcurl`.
 
 ## Curriculum progress
 
-- **Week 1 quiz topics** — all covered and logged in `QUESTIONS.md` (`## 2026-08-30 — Week 1: Go senior-level depth`): GMP scheduler/syscall handoff, tricolor GC + write barrier, Go memory model/happens-before, `errgroup.WithContext` vs. manual context+WaitGroup, generics constraints.
-- **Week 1 resume-story day — still NOT done.** The TPS-optimization story (2000→8000 TPS, Hyperledger Fabric) in `STORIES.md` is still blank. This is explicitly flagged as connected to a real gap found in the transcript backlog (see below) — the user can state the outcome of the Fabric architecture but struggles to own the design reasoning when pushed. Worth doing the resume-story drill and the backlog item together rather than separately.
-- **Week 2 quiz** — started, paused after Q1. First question was Postgres MVCC (`xmin`/`xmax`, tuple visibility, why `VACUUM` is needed) — the user had not answered yet when they paused ("stop for now, will restart later"). Resume from that exact question if continuing Week 2 quiz next.
+- **Week 1 resume-story day — still NOT done.** TPS-optimization story (2000→8000 TPS, Hyperledger Fabric) in `STORIES.md` is still blank. Tied to a real interview gap (see backlog below).
+- **Week 2 quiz — indexing + `EXPLAIN ANALYZE` covered this session** (B-tree fit/leftmost-prefix rule, seq-scan-vs-index-scan cost model, GIN vs. GiST structural difference, `EXPLAIN ANALYZE` row-estimate mismatch → nested-loop blowup). Full detail in `QUESTIONS.md` under `## 2026-09-16 — Week 2: indexing + EXPLAIN ANALYZE` — don't re-derive it here, read that entry. Most important thing to carry forward:
+  - **The "surface-level, no why" pattern is now confirmed across three distinct topics** (Fabric/Postgres MVCC compare-contrast on 2026-09-09; random-I/O cost and EXPLAIN ANALYZE row-mismatch on 2026-09-16). Treat this as a standing habit to interrupt on **every** quiz question going forward, not a topic-specific gap — when an answer names the right conclusion but not the mechanism, push at least once for the physical/structural reason before moving on.
+  - **New redrill items:** B-tree/seq-scan cost mechanism (heap-page amortization) and GIN-vs-GiST structure (inverted index vs. lossy bounding-predicate tree) both needed full explanations given directly, not derived — redrill from scratch next session, don't assume retention.
+  - User explicitly asked to revisit `EXPLAIN ANALYZE` again later even though it went reasonably well this pass — don't treat it as closed.
+- **Week 2 topics not yet touched:** isolation levels beyond RC/RR (serializable/predicate locks/serialization anomalies), row-locking/deadlocks, connection pooling, idempotency keys/outbox/retry-backoff, K8s basics.
 
-## Mock-interview transcript backlog (new this session)
+## Mock-interview transcript backlog
 
-The user has 19 real mock-interview transcripts at `~/Projects/meetings/reviewed*_clean_text.txt` (rough ASR transcriptions, not part of this repo). A subagent reviewed all 19 and extracted ~55 concrete weak spots across ~30 topic areas (Go concurrency, 5 system-design problems, Postgres/SQL/NoSQL, Kafka, K8s/Docker/AWS, networking, git, and explaining-own-work-under-pressure). Full list is now in `QUESTIONS.md` under `## 2026-08-30 — Backlog: review of 19 past mock-interview transcripts` — do not re-read the raw transcripts again, that entry is the durable extraction.
+Full extraction (~55 weak spots) lives in `QUESTIONS.md` under `## 2026-08-30 — Backlog: review of 19 past mock-interview transcripts` — do not re-read the raw transcripts (`~/Projects/meetings/reviewed*_clean_text.txt`), that entry is the durable record. Two flagged as highest-priority (recurring across multiple interviews, still undrilled):
+1. **GOMAXPROCS reasoning** — can't justify a concurrency number from first principles.
+2. **Explaining own project's architecture/data-model rationale under adversarial questioning** — same gap this session's Fabric compare-contrast just re-confirmed.
 
-Two things flagged as the highest-priority items to drill first (recurring across *multiple separate interviews*, not one-off slips):
-1. **GOMAXPROCS reasoning** — can't justify a concurrency number from first principles when pushed.
-2. **Explaining own project's data model/architecture rationale under adversarial questioning** — repeatedly collapses to a surface-level description ("it's a login integration") instead of a concrete entity/lifecycle/decision answer. This is the same gap underlying the still-pending TPS resume-story day.
+## Options for next session
 
-A secondary pattern worth naming to the user if it comes up again: "I'm not sure" used as a terminal answer rather than a reasoned attempt (showed up for escape analysis, DaemonSets, NoSQL indexing, distributed transactions, etc.).
+No fixed decision pending — pick based on what's fresher:
+- Continue Week 2 quiz (isolation levels beyond RC/RR, row-locking/deadlocks, connection pooling are the natural next slice).
+- Redrill B-tree/seq-scan cost mechanism and GIN-vs-GiST structure (new gaps from 2026-09-16, didn't stick on first pass).
+- Drill the two flagged backlog priorities (GOMAXPROCS, or architecture-under-pressure — the latter pairs naturally with the still-undone TPS resume-story day).
 
 ## Suggested skills for the next session
 
-- No skill is strictly required to continue quizzing/reviewing — that's plain conversation following `CURRICULUM.md`'s protocol.
-- If the next session focuses on drilling the flagged weak spots (GOMAXPROCS reasoning, or rehearsing the project-explanation/TPS story under adversarial pressure), consider calling the Skill tool for **`mattpocock-skills:grilling`** — it's built for relentlessly stress-testing a plan/answer/explanation, which matches "make the user defend a design decision like a real interviewer would" better than a plain quiz round.
+- Plain quiz continuation needs no skill — just `CURRICULUM.md`'s protocol.
+- For drilling GOMAXPROCS or rehearsing the TPS/architecture story under adversarial pressure, call the Skill tool for **`mattpocock-skills:grilling`** — built for relentlessly stress-testing an explanation, which fits better than a plain quiz round.
