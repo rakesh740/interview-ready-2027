@@ -35,8 +35,10 @@ Full extraction (~55 weak spots) lives in `QUESTIONS.md` under `## 2026-08-30 �
 
 ## Options for next session
 
-No fixed decision pending — pick based on what's fresher:
-- Finish the last two Week 2 quiz topics: idempotency keys/outbox/retry-backoff, K8s basics — this closes out Week 2's quiz-topics list entirely.
+**K8s basics was started but not finished** (2026-10-07, different device/session than the one that logged the 2026-09-29 entry above): asked how a Deployment's controller detects and replaces a deleted Pod (ReplicaSet controller watching pod status via the API server, reconciling desired vs. actual replica count). Session was paused before the user answered — no weak spot to log yet, just restart K8s basics from that same question rather than assuming it's covered.
+
+No fixed decision pending otherwise — pick based on what's fresher:
+- Finish the last two Week 2 quiz topics: idempotency keys/outbox/retry-backoff, K8s basics (resume from the Deployment/ReplicaSet question above) — this closes out Week 2's quiz-topics list entirely.
 - Redrill the four accumulated "didn't stick" items in one pass: B-tree/seq-scan cost, GIN-vs-GiST structure, write skew/SSI, deadlock wait-for-graph mechanics, connection pooling resource/pooling-mode tradeoff. This is getting like a real backlog — worth a dedicated redrill session rather than letting it grow further.
 - Drill the two flagged backlog priorities (GOMAXPROCS, or architecture-under-pressure — the latter pairs naturally with the still-undone TPS resume-story day).
 
